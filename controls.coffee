@@ -10,6 +10,12 @@ Meteor.startup ->
     console.log '======= Template rendered: ======='
     console.log @
     rendered = @
+
+    if rendered.data.color
+      $(@find '.draghandle').css 'background', rendered.data.color
+      $(@find '.fader').css 'border-color', rendered.data.color
+
+
     Meteor.subscribe 'controlValues',
       onReady: ->
         console.log 'COLLECTION ONREADY'
