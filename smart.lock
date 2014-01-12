@@ -1,0 +1,25 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "social-faders": {
+        "path": "."
+      }
+    },
+    "packages": {
+      "social-faders": {
+        "path": "."
+      },
+      "collection2": {
+        "git": "https://github.com/aldeed/meteor-collection2.git",
+        "tag": "v0.2.16",
+        "commit": "9647881e7cde07a6548dfdd214c67dfdd7424408"
+      },
+      "simple-schema": {
+        "git": "https://github.com/aldeed/meteor-simple-schema.git",
+        "tag": "v0.2.26",
+        "commit": "2984003f0edf686023f5fafdce9abffb3cdc6a21"
+      }
+    }
+  }
+}

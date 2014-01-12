@@ -1,0 +1,11 @@
+{
+  "name": "social-faders",
+  "description": "Control components with social networking features.",
+  "homepage": "https://github.com/noahadler/social-faders",
+  "author": "Noah Adler",
+  "version": "0.1.0",
+  "git": "https://github.com/noahadler/social-faders.git",
+  "packages": {
+    "collection2": "0.2.16"
+  }
+}
