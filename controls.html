@@ -20,7 +20,24 @@
   {{/isolate}}
 </template>
 
-<template name="grid">
-  <div class="grid">
+<template name="toggle_button">
+  {{#isolate}}
+  <div class="toggle-button">
+    <div class="toggle-inset">
+    </div>
   </div>
+  {{/isolate}}
+</template>
+
+<template name="toggle_grid">
+  {{#isolate}}
+  <div class="toggle-grid">
+    {{#each y}}
+      {{#each x}}
+        {{toggle_button h}}
+      {{/each}}
+      <br/>
+    {{/each}}
+  </div>
+  {{/isolate}}
 </template>

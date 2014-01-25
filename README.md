@@ -15,10 +15,11 @@ Usage
 
 Widgets are implemented as Handlebars helpers.
 
-{{verticalFader channel="volume1"}}
-{{horizontalFader channel="reverb2" width="200"}}
+    {{verticalFader channel="volume1"}}
+    {{horizontalFader channel="reverb2" width="200"}}
+    {{toggle_button channel="toggle3"}}
+    {{toggle_grid channel="sequncerSteps" width="8" height="3"}}
 
 TODO:
-{{button channel="toggle3"}}
-{{pad channelX="x" channelY="y" points="3"}}
+    {{pad channelX="x" channelY="y" points="3"}}
 

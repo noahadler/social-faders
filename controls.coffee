@@ -5,6 +5,10 @@ Meteor.startup ->
     new Handlebars.SafeString Template.horizontal_fader context.hash
   Handlebars.registerHelper 'vertical_fader', (context, options) ->
     return new Handlebars.SafeString Template.vertical_fader context.hash
+  Handlebars.registerHelper 'toggle_button', (context, options) ->
+    return new Handlebars.SafeString Template.toggle_button context.hash
+  Handlebars.registerHelper 'toggle_grid', (context, options) ->
+    return new Handlebars.SafeString Template.toggle_grid context.hash
 
   Template.vertical_fader.rendered = Template.horizontal_fader.rendered = ->
     console.log '======= Template rendered: ======='
@@ -78,3 +82,78 @@ Meteor.startup ->
             UpdateDraghandle id, fields
           removed: (id) ->
             console.log 'removed'
+
+  Template.toggle_button.events
+    'click .toggle-inset': (e,tpl) ->
+      console.log 'CLICK'
+      inset = $(tpl.find '.toggle-inset')
+      console.log @
+      console.log tpl
+
+      channel = tpl.data.channel
+
+      value_cursor = ControlValues.findOne { channel: channel }
+      console.log Meteor
+      if !(value_cursor?)
+        data_id = ControlValues.insert { value: 0.0, channel: channel, user_id: Meteor.userId() }
+        value_cursor = ControlValues.findOne { _id: data_id }
+
+      console.log 'updating control value'
+      ControlValues.update value_cursor._id,
+        $set:
+          value: if inset.hasClass('on') then 0 else 1
+          user_id: Meteor.userId()
+
+  Template.toggle_button.rendered = ->
+    rendered = @
+    Meteor.subscribe 'controlValues',
+      onReady: ->
+        channel = null
+        if rendered.data?
+          #data_id = @data._id
+          channel = rendered.data.channel
+
+        value_cursor = ControlValues.findOne { channel: channel }
+        console.log Meteor
+        if !(value_cursor?)
+          data_id = ControlValues.insert { value: 0.0, channel: channel, user_id: Meteor.userId() }
+          value_cursor = ControlValues.findOne { _id: data_id }
+
+        console.log 'value cursor:'
+        console.log value_cursor
+
+        UpdateInset = (id, fields) ->
+          inset = rendered.find '.toggle-inset'
+          inset = $(inset)
+          console.log 'UpdateInset:'
+          console.log inset
+
+          # Update toggle with picture of user who toggled it on
+          console.log fields
+          if fields.user_id? and window.UserProfiles?
+            u = window.UserProfiles.findOne fields.user_id
+            inset.css('background-image', 'url(' + u.picture + ')')
+
+          if fields.value == 1
+            inset.addClass 'on'
+          else if fields.value == 0
+            inset.removeClass 'on'
+
+        ControlValues.find(value_cursor._id).observeChanges
+          added: UpdateInset
+          changed: UpdateInset
+          removed: (id) ->
+            console.log 'removed'
+
+  Template.toggle_grid.helpers
+    x: ->
+      {y: @y, x: x, grid: @grid} for x in [1..3]
+    y: ->
+      {y: y, grid: @} for y in [1..@height]
+    h: ->
+      hash = _.extend {}, @grid
+      delete hash.width
+      delete hash.height
+      hash.channel += '-' + @x + '-' + @y
+      button_context = {hash: hash}
+      return button_context
