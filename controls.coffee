@@ -147,7 +147,7 @@ Meteor.startup ->
 
   Template.toggle_grid.helpers
     x: ->
-      {y: @y, x: x, grid: @grid} for x in [1..3]
+      {y: @y, x: x, grid: @grid} for x in [1..@grid.width]
     y: ->
       {y: y, grid: @} for y in [1..@height]
     h: ->
