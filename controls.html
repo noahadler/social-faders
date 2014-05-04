@@ -1,43 +1,37 @@
 <template name="horizontal_fader">
-  {{#isolate}}
   <div class="horizontal fader">
     <div class="draghandle-container">
       <div class="draghandle">
       </div>
     </div>
   </div>
-  {{/isolate}}
 </template>
 
 <template name="vertical_fader">
-  {{#isolate}}
   <div class="vertical fader {{channel}}">
     <div class="draghandle-container">
       <div class="draghandle">
       </div>
     </div>
   </div>
-  {{/isolate}}
 </template>
 
 <template name="toggle_button">
-  {{#isolate}}
   <div class="toggle-button">
-    <div class="toggle-inset">
+    <div class="{{class}}" style="{{style}}">
     </div>
   </div>
-  {{/isolate}}
 </template>
 
 <template name="toggle_grid">
-  {{#isolate}}
   <div class="toggle-grid">
     {{#each y}}
       {{#each x}}
-        {{toggle_button h}}
+        {{#with d}}
+          {{> toggle_button}}
+        {{/with}}
       {{/each}}
       <br/>
     {{/each}}
   </div>
-  {{/isolate}}
 </template>
