@@ -20,7 +20,7 @@
 }
 
 .draghandle {
-  background: lightgray;
+  background-color: lightgray;
   border-radius: 3px;
   width: 48px;
   height: 48px;
@@ -37,7 +37,7 @@
 }
 
 .toggle-inset {
-  background: lightgray;
+  background-color: lightgray;
   border-radius: 3px;
   width: 48px;
   height: 48px;
@@ -45,5 +45,5 @@
 }
 
 .toggle-inset.on {
-  background: orange;
+  background-color: orange;
 }

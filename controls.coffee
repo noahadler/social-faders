@@ -1,14 +1,7 @@
 ControlValues = @ControlValues
 
 Meteor.startup ->
-  Handlebars.registerHelper 'horizontal_fader', (context, options) ->
-    new Handlebars.SafeString Template.horizontal_fader context.hash
-  Handlebars.registerHelper 'vertical_fader', (context, options) ->
-    return new Handlebars.SafeString Template.vertical_fader context.hash
-  Handlebars.registerHelper 'toggle_button', (context, options) ->
-    return new Handlebars.SafeString Template.toggle_button context.hash
-  Handlebars.registerHelper 'toggle_grid', (context, options) ->
-    return new Handlebars.SafeString Template.toggle_grid context.hash
+  Meteor.subscribe 'userProfiles'
 
   Template.vertical_fader.rendered = Template.horizontal_fader.rendered = ->
     console.log '======= Template rendered: ======='
@@ -16,7 +9,7 @@ Meteor.startup ->
     rendered = @
 
     if rendered.data.color
-      $(@find '.draghandle').css 'background', rendered.data.color
+      $(@find '.draghandle').css 'background-color', rendered.data.color
       $(@find '.fader').css 'border-color', rendered.data.color
 
 
@@ -90,7 +83,7 @@ Meteor.startup ->
       console.log @
       console.log tpl
 
-      channel = tpl.data.channel
+      channel = @hash.channel
 
       value_cursor = ControlValues.findOne { channel: channel }
       console.log Meteor
@@ -104,46 +97,23 @@ Meteor.startup ->
           value: if inset.hasClass('on') then 0 else 1
           user_id: Meteor.userId()
 
+  Template.toggle_button.helpers
+    activeClasses: ->
+      console.log 'activeClasses', @, arguments
+      #return new Spacebars.SafeString 'toggle-inset'
+      v = ControlValues.findOne { channel: @hash.channel }
+      active = if v? and v.value > 0 then 'toggle-inset on' else 'toggle-inset'
+      return new Spacebars.SafeString active
+    style: ->
+      v = ControlValues.findOne { channel: @hash.channel }
+      if v? and v.value > 0 and v.user_id? and window.UserProfiles?
+        u = window.UserProfiles.findOne v.user_id
+        return new Spacebars.SafeString('background-image: url("' + u.picture + '"); background-size: 48px 48px;')
+
   Template.toggle_button.rendered = ->
-    rendered = @
-    Meteor.subscribe 'controlValues',
-      onReady: ->
-        channel = null
-        if rendered.data?
-          #data_id = @data._id
-          channel = rendered.data.channel
-
-        value_cursor = ControlValues.findOne { channel: channel }
-        console.log Meteor
-        if !(value_cursor?)
-          data_id = ControlValues.insert { value: 0.0, channel: channel, user_id: Meteor.userId() }
-          value_cursor = ControlValues.findOne { _id: data_id }
-
-        console.log 'value cursor:'
-        console.log value_cursor
-
-        UpdateInset = (id, fields) ->
-          inset = rendered.find '.toggle-inset'
-          inset = $(inset)
-          console.log 'UpdateInset:'
-          console.log inset
-
-          # Update toggle with picture of user who toggled it on
-          console.log fields
-          if fields.user_id? and window.UserProfiles?
-            u = window.UserProfiles.findOne fields.user_id
-            inset.css('background-image', 'url(' + u.picture + ')')
-
-          if fields.value == 1
-            inset.addClass 'on'
-          else if fields.value == 0
-            inset.removeClass 'on'
-
-        ControlValues.find(value_cursor._id).observeChanges
-          added: UpdateInset
-          changed: UpdateInset
-          removed: (id) ->
-            console.log 'removed'
+    console.log 'toggle_button.rendered', @, arguments
+    if not ControlValues.findOne { channel: @data.hash.channel }
+      ControlValues.insert { value: 0.0, channel: @data.hash.channel, user_id: Meteor.userId() }
 
   Template.toggle_grid.helpers
     x: ->
