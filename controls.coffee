@@ -92,7 +92,7 @@ Meteor.startup ->
         value_cursor = ControlValues.findOne { _id: data_id }
 
       console.log 'updating control value'
-      ControlValues.update value_cursor._id,
+      ControlValues.update {_id: value_cursor._id},
         $set:
           value: if inset.hasClass('on') then 0 else 1
           user_id: Meteor.userId()
@@ -127,3 +127,10 @@ Meteor.startup ->
       hash.channel += '-' + @x + '-' + @y
       button_context = {hash: hash}
       return button_context
+    d: ->
+      d = _.extend {}, @grid
+      delete d.width
+      delete d.height
+      d.channel += '-' + @x + '-' + @y
+      return d
+
