@@ -1,0 +1,7 @@
+{
+  "packages": {
+    "noahadler:social-faders": {
+      "path": "../.."
+    }
+  }
+}

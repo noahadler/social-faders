@@ -1,0 +1,15 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "noahadler:social-faders": {
+        "path": "../.."
+      }
+    },
+    "packages": {
+      "noahadler:social-faders": {
+        "path": "../.."
+      }
+    }
+  }
+}
